@@ -6,8 +6,16 @@ The HTTP header utilities of [Bucketchain](https://github.com/Bucketchain/puresc
 
 ## Installation
 
+### Bower
+
 ```
-bower install purescript-bucketchain-header-utils
+$ bower install purescript-bucketchain-header-utils
+```
+
+### Spago
+
+```
+$ spago install bucketchain-header-utils
 ```
 
 ## Documentation
