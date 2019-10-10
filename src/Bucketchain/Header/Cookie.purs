@@ -1,5 +1,6 @@
 module Bucketchain.Header.Cookie
   ( Cookie
+  , SameSite(..)
   , addCookie
   , getCookies
   ) where
@@ -23,7 +24,20 @@ type Cookie =
   , maxAge :: Maybe Int
   , secure :: Boolean
   , httpOnly :: Boolean
+  , sameSite :: Maybe SameSite
   }
+
+-- | The SameSite directive.
+data SameSite
+  = Strict
+  | Lax
+
+derive instance eqSameSite :: Eq SameSite
+derive instance ordSameSite :: Ord SameSite
+
+instance showSameSite :: Show SameSite where
+  show Strict = "Strict"
+  show Lax = "Lax"
 
 -- | Add a cookie.
 addCookie :: Http -> Cookie -> Effect Unit
@@ -35,6 +49,7 @@ addCookie http pld =
 toField :: Cookie -> String
 toField pld =
   joinWith "; "
+    <<< setSameSite pld
     <<< setHttpOnly pld
     <<< setSecure pld
     <<< setMaxAge pld
@@ -71,6 +86,12 @@ setHttpOnly pld xs =
   if pld.httpOnly
     then snoc xs "HttpOnly"
     else xs
+
+setSameSite :: Cookie -> Array String -> Array String
+setSameSite pld xs =
+  case pld.sameSite of
+    Nothing -> xs
+    Just s -> snoc xs $ "SameSite=" <> show s
 
 -- | Get cookies.
 getCookies :: Http -> Object String

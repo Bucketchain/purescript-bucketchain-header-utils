@@ -3,7 +3,7 @@ module Main where
 import Prelude
 
 import Bucketchain (createServer, listen)
-import Bucketchain.Header.Cookie (addCookie, getCookies)
+import Bucketchain.Header.Cookie (SameSite(..), addCookie, getCookies)
 import Bucketchain.Header.Vary (addVary)
 import Bucketchain.Http (requestMethod, requestURL)
 import Bucketchain.Middleware (Middleware)
@@ -44,6 +44,7 @@ middleware next = do
         , maxAge: Just 60
         , secure: false
         , httpOnly: true
+        , sameSite: Just Lax
         }
       pure Nothing
     else next
