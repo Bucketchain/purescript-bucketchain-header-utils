@@ -9,6 +9,7 @@ import Bucketchain.Http (requestMethod, requestURL)
 import Bucketchain.Middleware (Middleware)
 import Control.Monad.Reader (ask)
 import Data.Maybe (Maybe(..))
+import Data.Time.Duration (Seconds(..))
 import Effect (Effect)
 import Effect.Class (liftEffect)
 import Effect.Console (log)
@@ -41,7 +42,7 @@ middleware next = do
         , value: "test cookie"
         , domain: Nothing
         , path: Just "/"
-        , maxAge: Just 60
+        , maxAge: Just $ Seconds 60.0
         , secure: false
         , httpOnly: true
         , sameSite: Just Lax

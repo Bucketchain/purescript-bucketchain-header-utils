@@ -9,8 +9,10 @@ import Prelude
 
 import Bucketchain.Http (Http, setHeaders, requestHeaders, responseHeaders)
 import Data.Array (snoc, (!!))
+import Data.Int (ceil)
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.String (Pattern(..), split, trim, joinWith)
+import Data.Time.Duration (Seconds(..))
 import Data.Tuple (Tuple(..))
 import Effect (Effect)
 import Foreign.Object (Object, lookup, empty, fromFoldable)
@@ -21,7 +23,7 @@ type Cookie =
   , value :: String
   , domain :: Maybe String
   , path :: Maybe String
-  , maxAge :: Maybe Int
+  , maxAge :: Maybe Seconds
   , secure :: Boolean
   , httpOnly :: Boolean
   , sameSite :: Maybe SameSite
@@ -73,7 +75,8 @@ setMaxAge :: Cookie -> Array String -> Array String
 setMaxAge pld xs =
   case pld.maxAge of
     Nothing -> xs
-    Just i -> snoc xs $ "Max-Age=" <> show i
+    Just (Seconds sec) ->
+      snoc xs $ "Max-Age=" <> show (ceil sec)
 
 setSecure :: Cookie -> Array String -> Array String
 setSecure pld xs =
